@@ -18,6 +18,7 @@ struct Model {
 
 widget_ids! {
     struct Ids {
+        maincanvas,
         resolution,
         scale,
         rotation,
@@ -58,6 +59,13 @@ fn update(_app: &App, model: &mut Model, _update: Update) {
     // Calling `set_widgets` allows us to instantiate some widgets.
     let ui = &mut model.ui.set_widgets();
 
+    widget::Canvas::new()
+    .top_left_with_margin(20.0)
+    .w_h(220.0, 410.0)
+    .border(1.0)
+    .color(ui::color::WHITE.alpha(0.5))
+    .set(model.ids.maincanvas, ui);
+
     fn slider(val: f32, min: f32, max: f32) -> widget::Slider<'static, f32> {
         widget::Slider::new(val, min, max)
             .w_h(200.0, 30.0)
@@ -68,7 +76,8 @@ fn update(_app: &App, model: &mut Model, _update: Update) {
     }
 
     for value in slider(model.resolution as f32, 3.0, 15.0)
-        .top_left_with_margin(20.0)
+        .parent(model.ids.maincanvas)
+        .top_left_with_margin(10.0)
         .label("Resolution")
         .set(model.ids.resolution, ui)
     {
@@ -76,6 +85,7 @@ fn update(_app: &App, model: &mut Model, _update: Update) {
     }
 
     for value in slider(model.scale, 10.0, 500.0)
+        .parent(model.ids.maincanvas)
         .down(10.0)
         .label("Scale")
         .set(model.ids.scale, ui)
@@ -84,6 +94,7 @@ fn update(_app: &App, model: &mut Model, _update: Update) {
     }
 
     for value in slider(model.rotation, -PI, PI)
+        .parent(model.ids.maincanvas)
         .down(10.0)
         .label("Rotation")
         .set(model.ids.rotation, ui)
@@ -92,6 +103,7 @@ fn update(_app: &App, model: &mut Model, _update: Update) {
     }
 
     for _click in widget::Button::new()
+        .parent(model.ids.maincanvas)
         .down(10.0)
         .w_h(200.0, 60.0)
         .label("Random Color")
@@ -112,6 +124,7 @@ fn update(_app: &App, model: &mut Model, _update: Update) {
         -200.0,
         200.0,
     )
+    .parent(model.ids.maincanvas)
     .down(10.0)
     .w_h(200.0, 200.0)
     .label("Position")
@@ -123,8 +136,12 @@ fn update(_app: &App, model: &mut Model, _update: Update) {
     {
         model.position = Point2::new(x, y);
     }
+
+
 }
 
+
+//test
 // Draw the state of your `Model` into the given `Frame` here.
 fn view(app: &App, model: &Model, frame: Frame) {
     // Begin drawing
